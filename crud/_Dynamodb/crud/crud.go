@@ -19,7 +19,7 @@ type AwsConfig struct {
 type Model struct {
 	TableName  string
 	PrimaryKey string
-	svc        *dynamodb.DynamoDB
+	Svc        *dynamodb.DynamoDB
 }
 
 // -> NewModel: Create db models using a struct. It`s like a "constructor of my interface Model"
@@ -33,7 +33,7 @@ func NewModel(awscfg AwsConfig, tableName, primaryKey string) *Model {
 	return &Model{
 		TableName:  tableName,
 		PrimaryKey: primaryKey,
-		svc:        dynamodb.New(sess),
+		Svc:        dynamodb.New(sess),
 	}
 }
 
@@ -46,7 +46,7 @@ func (m *Model) CreateItem(data interface{}) error {
 		},
 	}
 
-	_, err := m.svc.PutItem(input)
+	_, err := m.Svc.PutItem(input)
 	utils.CheckErr(err, "")
 
 	return nil
@@ -61,7 +61,7 @@ func (m *Model) ReadItem(id interface{}) (map[string]interface{}, error) {
 		},
 	}
 
-	result, err := m.svc.GetItem(input)
+	result, err := m.Svc.GetItem(input)
 	utils.CheckErr(err, "Unable to get item")
 
 	item := make(map[string]interface{})
@@ -72,9 +72,38 @@ func (m *Model) ReadItem(id interface{}) (map[string]interface{}, error) {
 	return item, nil
 }
 
-// Resto das funções do CRUD...
-func editItem() {
-	//
+// EditItem: Edit an item by PK
+func (m *Model) EditItem(id interface{}, data interface{}) error {
+	key := map[string]*dynamodb.AttributeValue{
+		m.PrimaryKey: {S: aws.String(fmt.Sprintf("%v", id))},
+	}
+
+	updateExpression := "SET "
+	expressionAttributeValues := map[string]*dynamodb.AttributeValue{}
+	i := 0
+
+	// Construct the update expression and expression attribute values
+	for k, v := range data.(map[string]interface{}) {
+		i++
+		attributeName := fmt.Sprintf(":val%d", i)
+		updateExpression += fmt.Sprintf("%s = %s, ", k, attributeName)
+		expressionAttributeValues[attributeName] = &dynamodb.AttributeValue{S: aws.String(fmt.Sprintf("%v", v))}
+	}
+
+	// Remove the trailing comma and space from the update expression
+	updateExpression = updateExpression[:len(updateExpression)-2]
+
+	input := &dynamodb.UpdateItemInput{
+		TableName:                 aws.String(m.TableName),
+		Key:                       key,
+		ExpressionAttributeValues: expressionAttributeValues,
+		UpdateExpression:          aws.String(updateExpression),
+	}
+
+	_, err := m.Svc.UpdateItem(input)
+	utils.CheckErr(err, "Unable to update item")
+
+	return nil
 }
 
 // -> DelItem: delete an item by PK
@@ -88,7 +117,7 @@ func (m *Model) DelItem(id interface{}) error {
 		Key:       key,
 	}
 
-	_, err := m.svc.DeleteItem(input)
+	_, err := m.Svc.DeleteItem(input)
 	utils.CheckErr(err, "")
 
 	return nil

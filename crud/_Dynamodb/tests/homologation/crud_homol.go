@@ -32,6 +32,19 @@ func main() {
 
 	fmt.Println("Usuário encontrado:", user)
 
+	// Update the item
+	/*
+		updatedData := map[string]interface{}{
+			"Name": "Jane Doe",
+			"Age":  35,
+		}
+		err = userModel.EditItem("item_id_1", updatedData)
+		if err != nil {
+			fmt.Println("Error updating item:", err)
+			return
+		}
+	*/
+
 	// Deleting item
 	id = "2"
 	err = userModel.DelItem(id)

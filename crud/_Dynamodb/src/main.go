@@ -7,9 +7,15 @@ import (
 )
 
 func main() {
-	userModel := crud.NewModel("UserTeste", "ID")
+	// Setting local test
+	awsConfig := crud.AwsConfig{
+		DBEndpoint: "http://localhost:8000",
+		DBRegion:   "us-west-1",
+	}
 
-	// Criar um novo usuário
+	userModel := crud.NewModel(awsConfig, "UserTeste", "ID")
+
+	// Creating item
 	user := map[string]interface{}{
 		"ID":    "2",
 		"Name":  "joao pedro",
@@ -18,13 +24,20 @@ func main() {
 	err := userModel.CreateItem(user)
 	utils.CheckErrAbortProgram(err, "Unable to create item in table")
 
-	// Ler um usuário pelo ID
+	// Read item
 	id := "2"
 
 	user, err = userModel.ReadItem(id)
 	utils.CheckErrAbortProgram(err, "Unable to read item in table")
 
 	fmt.Println("Usuário encontrado:", user)
+
+	// Deleting item
+	id = "2"
+	err = userModel.DelItem(id)
+	utils.CheckErrAbortProgram(err, "Unable to delete item in table")
+
+	fmt.Println("Usuário deletado:", user)
 
 	// Resto das operações CRUD...
 }

@@ -16,6 +16,6 @@ aws dynamodb create-table \
     --table-class STANDARD \
     --endpoint-url "${local_dynamodb}"
 
-echo "Tables: "
+echo -e "\nTables: "
 
 aws dynamodb list-tables --endpoint-url "${local_dynamodb}"

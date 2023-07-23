@@ -1,4 +1,4 @@
-module _Dynamodb
+module _dynamodb
 
 go 1.20
 

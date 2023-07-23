@@ -1,19 +1,31 @@
 package main
 
-import "_Dynamodb/crud"
+import (
+	"_Dynamodb/crud"
+	"fmt"
+)
 
 func main() {
-	userModel := crud.NewModel(User{}, "ID")
+	userModel := crud.NewModel("UserTeste", "ID")
 
-	user := User{ID: 1, Name: "Carlos", Email: "carlinhos@gmail.com"}
-	userModel.CreateItem(user)
-	userModel.ReadItem(1)
-	// userModel.UpdateItem(user)
-	// userModel.DeleteItem(1)
-}
+	// Criar um novo usuário
+	user := map[string]interface{}{
+		"ID":    "1",
+		"Name":  "Carlos",
+		"Email": "carlinhos@gmail.com",
+	}
+	err := userModel.CreateItem(user)
+	if err != nil {
+		panic(err)
+	}
 
-type User struct {
-	ID    int
-	Name  string
-	Email string
+	// Ler um usuário pelo ID
+	id := "1"
+	user, err = userModel.ReadItem(id)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Usuário encontrado:", user)
+
+	// Resto das operações CRUD...
 }

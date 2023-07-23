@@ -29,4 +29,4 @@ aws dynamodb create-table \
 
 aws dynamodb describe-table --table-name User | grep TableStatus
 
-aws dynamodb list-tables --endpoint-url http://localhost:8000
+ç

@@ -1,4 +1,4 @@
-package main
+package crud
 
 import (
 	"fmt"
@@ -45,23 +45,4 @@ func NewModel(modelStruct interface{}, primaryKey string) *Model {
 	return &Model{
 		PartitionKey: primaryKey,
 	}
-}
-
-func main() {
-	// Crie um modelo genérico para a estrutura de exemplo 'User' e especifique o campo "ID" como chave primária
-	userModel := NewModel(User{}, "ID")
-
-	// Usar o CRUD genérico
-	user := User{ID: 1, Name: "Carlos", Email: "carlinhos@gmail.com"}
-	userModel.CreateItem(user)
-	userModel.ReadItem(1)
-	// userModel.Update(user)
-	// userModel.Delete(1)
-}
-
-// Exemplo de uma estrutura User para fins de ilustração
-type User struct {
-	ID    int
-	Name  string
-	Email string
 }

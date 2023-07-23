@@ -3,6 +3,7 @@ package main
 import (
 	"_Dynamodb/crud"
 	"fmt"
+	"utils/utils"
 )
 
 func main() {
@@ -10,21 +11,19 @@ func main() {
 
 	// Criar um novo usuário
 	user := map[string]interface{}{
-		"ID":    "1",
-		"Name":  "Carlos",
-		"Email": "carlinhos@gmail.com",
+		"ID":    "2",
+		"Name":  "joao pedro",
+		"Email": "jp@gmail.com",
 	}
 	err := userModel.CreateItem(user)
-	if err != nil {
-		panic(err)
-	}
+	utils.CheckErrAbortProgram(err, "Unable to create item in table")
 
 	// Ler um usuário pelo ID
-	id := "1"
+	id := "2"
+
 	user, err = userModel.ReadItem(id)
-	if err != nil {
-		panic(err)
-	}
+	utils.CheckErrAbortProgram(err, "Unable to read item in table")
+
 	fmt.Println("Usuário encontrado:", user)
 
 	// Resto das operações CRUD...

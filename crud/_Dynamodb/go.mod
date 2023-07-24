@@ -1,4 +1,4 @@
-module _Dynamodb
+module github.com/devdavidlima/_Plugins/crud/_dynamodb
 
 go 1.20
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"_Dynamodb/crud"
+	"_dynamodb/crud"
 	"fmt"
 	"utils/utils"
 )
